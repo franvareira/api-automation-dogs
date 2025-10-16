@@ -9,7 +9,7 @@ public class FileOperations {
 
     private static final String DIR_PATH_PROPERTIES =
 
-            System.getProperty("user.dir") + File.separator + "IntegrationTest" + File.separator + "src" +
+            System.getProperty("user.dir") + File.separator + "src" +
                     File.separator + "test" + File.separator + "resources" + File.separator + "properties" + File.separator;
 
     public static Properties getProperties(String fileName){

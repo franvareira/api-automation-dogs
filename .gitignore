@@ -62,3 +62,8 @@ buildNumber.properties
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.ja
 
+##########################
+### Relatorio
+##########################
+
+ allure-results/
