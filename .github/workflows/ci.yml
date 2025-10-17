@@ -1,4 +1,4 @@
-name: CI/CD - Execução de Testes Automatizados (Java + Allure)
+name: CI/CD - Execução de Testes Automatizados
 
 on:
   push:
