@@ -1,6 +1,7 @@
 package br.com.dogs.app.scenarios;
 
 import br.com.dogs.app.services.GetListAllDogs;
+import br.com.dogs.app.services.GetListDogParam;
 import br.com.dogs.app.services.GetListDogsRandom;
 import org.junit.jupiter.api.Test;
 
@@ -18,5 +19,11 @@ public class VerificarApiDogsTest {
     public void validarListRandomDogs(){
 
         GetListDogsRandom.validarListRandom();
+    }
+
+    @Test
+    public void validarListRacaRandomDogs(){
+
+        GetListDogParam.validarListRaca();
     }
 }
