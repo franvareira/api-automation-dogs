@@ -1,4 +1,4 @@
-package support.utils;
+package br.com.dogs.app.support.utils;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -1,7 +1,6 @@
-package services;
-
+package br.com.dogs.app.services;
 import io.restassured.response.Response;
-import support.utils.Endpoints;
+import br.com.dogs.app.support.utils.Endpoints;
 
 import static io.restassured.RestAssured.*;
 
