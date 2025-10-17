@@ -1,14 +1,11 @@
 package br.com.dogs.app.services;
 
 import br.com.dogs.app.support.utils.Endpoints;
+import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.response.Response;
-
-import java.util.List;
-
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class GetListDogsRandom extends Endpoints {
 
@@ -18,6 +15,7 @@ public class GetListDogsRandom extends Endpoints {
         Response responseRest =
 
                 given ()
+                        .filter(new AllureRestAssured())
                         .log().all()
                 .when()
                         .get(BASE_URI + PATH_RANDOM)
