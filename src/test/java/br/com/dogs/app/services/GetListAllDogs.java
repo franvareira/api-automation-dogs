@@ -1,5 +1,6 @@
 package br.com.dogs.app.services;
 import io.qameta.allure.restassured.AllureRestAssured;
+import io.restassured.module.jsv.JsonSchemaValidator;
 import io.restassured.response.Response;
 import br.com.dogs.app.support.utils.Endpoints;
 import java.util.List;
@@ -24,6 +25,7 @@ public class GetListAllDogs extends Endpoints {
                         .log().all()
                         .assertThat()
                         .statusCode(200)
+                        .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schemas/schemaValidator.json"))
                         .extract().response();
 
 
