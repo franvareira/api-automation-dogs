@@ -29,7 +29,7 @@ jobs:
         run: mvn -Dtest=RunnerAllTest test
 
       - name: Gerar Allure Report
-        run: mvn allure:report
+        run: mvn io.qameta.allure:allure-maven:2.15.0:report
 
       - name: Salvar Allure Results como artefato
         uses: actions/upload-artifact@v4
