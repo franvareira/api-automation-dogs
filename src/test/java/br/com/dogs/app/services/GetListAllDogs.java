@@ -2,14 +2,19 @@ package br.com.dogs.app.services;
 import io.restassured.response.Response;
 import br.com.dogs.app.support.utils.Endpoints;
 
+import java.util.List;
+
 import static io.restassured.RestAssured.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class GetListAllDogs extends Endpoints {
 
 
     public static void validarListAll(){
 
-        Response reponseRest =
+        Response responseRest =
 
                 given ()
                         .log().all()
@@ -21,6 +26,15 @@ public class GetListAllDogs extends Endpoints {
                         .statusCode(200)
                         .extract().response();
 
+
+        assertThat(responseRest.path("status"), equalTo("success"));
+        assertNotNull(responseRest.path("message.bulldog"));
+
+        List<String> bulldogSubracas = responseRest.path("message.bulldog");
+        assertThat(bulldogSubracas, hasItems("boston", "english", "french"));
+
+        List<String> affenpinscher = responseRest.path("message.affenpinscher");
+        assertThat(affenpinscher, empty());
 
 
     }
