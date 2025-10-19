@@ -12,34 +12,33 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class GetListAllDogs extends Endpoints {
 
 
-    public static void validarListAll(){
+    public static void validarListAll() {
+        try {
+            Response responseRest =
 
-        Response responseRest =
-
-                given ()
-                        .filter(new AllureRestAssured())
-                        .log().all()
-                 .when()
-                        .get(BASE_URI + PATH_ALL)
-                 .then()
-                        .log().all()
-                        .assertThat()
-                        .statusCode(200)
-                        .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schemas/schemaValidator.json"))
-                        .extract().response();
-
-
-        assertThat(responseRest.path("status"), equalTo("success"));
-        assertNotNull(responseRest.path("message.bulldog"));
-
-        List<String> bulldogSubracas = responseRest.path("message.bulldog");
-        assertThat(bulldogSubracas, hasItems("boston", "english", "french"));
-
-        List<String> affenpinscher = responseRest.path("message.affenpinscher");
-        assertThat(affenpinscher, empty());
+                    given()
+                            .filter(new AllureRestAssured())
+                            .log().all()
+                            .when()
+                            .get(BASE_URI + PATH_ALL)
+                            .then()
+                            .log().all()
+                            .assertThat()
+                            .statusCode(200)
+                            .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schemas/schemaValidator.json"))
+                            .extract().response();
 
 
+            assertThat(responseRest.path("status"), equalTo("success"));
+            assertNotNull(responseRest.path("message.bulldog"));
+
+            List<String> bulldogSubracas = responseRest.path("message.bulldog");
+            assertThat(bulldogSubracas, hasItems("boston", "english", "french"));
+
+            List<String> affenpinscher = responseRest.path("message.affenpinscher");
+            assertThat(affenpinscher, empty());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-
-
 }

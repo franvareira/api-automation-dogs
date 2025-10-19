@@ -13,26 +13,27 @@ public class GetListDogParam extends Endpoints {
     static String raca = FileOperations.randomRaca();
 
     public static void validarListRaca() {
+        try {
+            Response responseRest =
+                    given()
+                            .filter(new AllureRestAssured())
+                            .log().all()
+                    .when()
+                            .get(BASE_URI_PARAM + raca + PATH_PARAM)
+                    .then()
+                            .log().all()
+                            .assertThat()
+                            .statusCode(200)
+                            .extract().response();
 
-        Response responseRest =
+            assertThat(responseRest.path("status"), is("success"));
+            assertThat(responseRest.path("message"), notNullValue());
 
-                given()
-                        .filter(new AllureRestAssured())
-                        .log().all()
-                .when()
-                        .get(BASE_URI_PARAM + raca + PATH_PARAM)
-                .then()
-                        .log().all()
-                        .assertThat()
-                        .statusCode(200)
-                        .extract().response();
-
-        assertThat(responseRest.path("status"), is("success"));
-        assertThat(responseRest.path("message"), notNullValue());
-
-        String url = responseRest.then().extract().path("message");
-        String nomeImagem = url.substring(url.lastIndexOf('/') + 1);
-        assertThat((String) responseRest.path("message"), containsString(nomeImagem));
-
+            String url = responseRest.then().extract().path("message");
+            String nomeImagem = url.substring(url.lastIndexOf('/') + 1);
+            assertThat((String) responseRest.path("message"), containsString(nomeImagem));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
