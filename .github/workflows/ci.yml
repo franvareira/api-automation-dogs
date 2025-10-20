@@ -2,7 +2,6 @@ name: CI/CD - Execução de Testes Automatizados
 
 permissions:
   contents: write
-  pull_request: write
   pages: write
   id-token: write
 
