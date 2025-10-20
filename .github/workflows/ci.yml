@@ -92,7 +92,7 @@ jobs:
           echo "PR number: ${{ steps.cpr.outputs.pull-request-number }}"
 
       - name: Merge automático do PR
-        run: |
+        run: >
           if [ -n "${{ steps.cpr.outputs.pull-request-number }}" ]; then
             gh pr merge ${{ steps.cpr.outputs.pull-request-number }} --merge --auto --admin
           else
