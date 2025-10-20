@@ -63,6 +63,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git checkout -b pr/develop-to-master
+          git push origin pr/develop-to-master
 
       - name: Criar Pull Request
         id: cpr
