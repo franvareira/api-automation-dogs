@@ -82,25 +82,26 @@ jobs:
     needs: create_pr
     name: Merge automático do PR
     steps:
-      - name: Autenticar GitHub CLI
-        run: gh auth setup-git
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Debug - verificar PR
+      - name: Instalar e autenticar GitHub CLI
         run: |
-          echo "PR number : $PR_NUMBER"
-        env:
-          PR_NUMBER: ${{ steps.cpr.outputs.pull-request-number }}
+          sudo apt-get update
+          sudo apt-get install -y gh
+          echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
 
-      - name: Merge automático do PR
-        run: >
-          if [ -n "${{ steps.cpr.outputs.pull-request-number }}" ]; then
-            gh pr merge ${{ steps.cpr.outputs.pull-request-number }} --merge --auto --admin
-          else
-            echo "Nenhum PR criado."
+      - name: Verificar se PR existe
+        id: check_pr
+        run: |
+          PR_NUMBER=$(gh pr list --base master --head pr/develop-to-master --json number --jq '.[0].number')
+          echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
+          if [ -z "$PR_NUMBER" ]; then
+            echo "Nenhum PR encontrado."
+            exit 0
           fi
-        shell: bash
+          echo "PR encontrado: $PR_NUMBER"
+
+      - name: Fazer merge automático do PR
+        if: env.PR_NUMBER != ''
+        run: gh pr merge $PR_NUMBER --merge --auto --admin
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
