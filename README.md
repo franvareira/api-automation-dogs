@@ -12,8 +12,6 @@ Este projeto usa Java, Maven, JUnit 5, RestAssured e Allure para geração de re
 ![Java 23](https://img.shields.io/badge/Java-23-blue)  
 ![Maven](https://img.shields.io/badge/Maven-3.x-orange)
 
-> ⚠️ O link do Allure Report só funcionará após o primeiro merge para `main` (quando o GitHub Pages estiver configurado).
-
 ---
 
 ## 🧱 Tecnologias & versões
@@ -130,34 +128,52 @@ allure --version
 
 ---
 
-## 🧭 Fluxo no GitHub Actions / CI
 
-1. **Push ou pull request** para a branch `develop` → dispara a pipeline para executar testes  
-2. **Merge/Push para `master`** → executa testes +, em seguida, publica relatório no **GitHub Pages**  
-3. **Execução manual**: via botão “Run workflow” definido com `workflow_dispatch`
+## 🚀 Fluxo CI/CD - Testes Automatizados e Merge Automático
+
+#### 🧪 É possível executar manualmente via botão “Run workflow” definido com `workflow_dispatch`
+
+📌 **Branch develop**
+
+└─ 🧪 **1. Executa testes automatizados**
+
+    ├─ Build + Testes JUnit + Allure Report
+
+    └─ Se falhar ❌ → workflow termina, nenhum PR é criado
+
+└─ 🤖 **2. PR automático develop → master**
+
+    └─ Criado apenas se todos os testes passarem ✅
+
+└─ 🔁 **3. Merge automático do PR**
+
+    └─ Executado se todos os checks obrigatórios forem aprovados
+
+└─ 🌐 **4. Publica Allure Report no GitHub Pages**
+
+    └─ Só após merge bem-sucedido na branch master
+
 
 O `ci.yml` será algo como:
 
 ```yml
-# [exemplo simplificado]
 on:
   push:
-    branches: [ develop, master ]
+    branches: [ develop ]
   pull_request:
-    branches: [ develop, master ]
+    branches: [ master ]
   workflow_dispatch:
 
 jobs:
   test:
-    # … etapas de checkout, build, testes, upload de artefatos
-  deploy-report:
-    needs: test
-    if: ${{ success() && github.ref == 'refs/heads/main' }}
-    # etapas de download e publicação via peaceiris/actions-gh-pages
+    runs-on: ubuntu-latest
+    name: Testes automatizados
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
 ```
 
-Após o primeiro merge para a `main`, o GitHub Pages deve estar configurado para usar a branch `gh-pages` como origem.  
-Então o relatório ficará disponível em:
+Após o merge para a `master`, o relatório ficará disponível em:
 
 ```
 https://franvareira.github.io/api-automation-dogs/
