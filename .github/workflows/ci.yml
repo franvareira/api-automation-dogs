@@ -88,8 +88,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Debug - verificar PR
-        run:
-          echo "PR number: ${{ steps.cpr.outputs.pull-request-number }}"
+        run: |
+          echo "PR number : $PR_NUMBER"
+        env:
+          PR_NUMBER: ${{ steps.cpr.outputs.pull-request-number }}
 
       - name: Merge automático do PR
         run: >
