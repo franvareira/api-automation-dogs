@@ -129,51 +129,33 @@ allure --version
 ---
 
 
-## 🚀 Fluxo CI/CD - Testes Automatizados e Merge Automático
+## 🚀 Fluxo CI/CD - Testes Automatizados 
 
-#### 🧪 É possível executar manualmente via botão “Run workflow” definido com `workflow_dispatch`
+### 🔹 Execução Automática
 
-📌 **Branch develop**
+Disparado automaticamente ao fazer push na branch `develop`.
 
-└─ 🧪 **1. Executa testes automatizados**
+Executa:
 
-    ├─ Build + Testes JUnit + Allure Report
+- Build do projeto.
+- Execução de testes JUnit5.
+- Geração do Allure Report.
+- Publicação do relatório no GitHub Pages.
 
-    └─ Se falhar ❌ → workflow termina, nenhum PR é criado
+### 🔹 Execução Manual
 
-└─ 🤖 **2. PR automático develop → master**
+- Vá para a aba Actions no repositório.
+- Selecione CI/CD - Testes Automatizados.
+- Clique em Run workflow.
+- Escolha a branch (develop ou master) e clique em Run workflow.
 
-    └─ Criado apenas se todos os testes passarem ✅
+### 🔹 Observações
 
-└─ 🔁 **3. Merge automático do PR**
+- É possível executar testes quantas vezes forem necessárias em qualquer branch (develop ou master).
+- Cada execução manual gera um relatório atualizado.
+- Workflow permite validação do código antes do merge manual para master.
 
-    └─ Executado se todos os checks obrigatórios forem aprovados
-
-└─ 🌐 **4. Publica Allure Report no GitHub Pages**
-
-    └─ Só após merge bem-sucedido na branch master
-
-
-O `ci.yml` será algo como:
-
-```yml
-on:
-  push:
-    branches: [ develop ]
-  workflow_dispatch:
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    name: Testes Automatizados
-    steps:
-      - name: Checkout do código
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-```
-
-Após o merge para a `master`, o relatório ficará disponível em no link abaixo:
+Após execução o relatório ficará disponível no link abaixo:
 
 ```
 https://franvareira.github.io/api-automation-dogs/
