@@ -173,7 +173,7 @@ jobs:
           fetch-depth: 0
 ```
 
-Após o merge para a `master`, o relatório ficará disponível em:
+Após o merge para a `master`, o relatório ficará disponível em no link abaixo:
 
 ```
 https://franvareira.github.io/api-automation-dogs/

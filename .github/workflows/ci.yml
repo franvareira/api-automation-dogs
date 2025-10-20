@@ -63,9 +63,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Gerar nome único da branch de PR
+      - name: Gerar branch única
         id: vars
-        run: echo "BRANCH_NAME=pr/develop-to-master-$(date +%s)" >> $GITHUB_ENV
+        run: echo "PR_BRANCH=pr/develop-to-master-${{ github.run_id }}" >> $GITHUB_ENV
 
       - name: Criar Pull Request
         id: cpr
@@ -73,7 +73,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           base: master
-          branch: ${{ env.BRANCH_NAME }}
+          branch: ${{ env.PR_BRANCH }}
           title: 'Merge automático de develop para master'
           body: 'PR criada automaticamente pelo GitHub Actions'
           draft: false
