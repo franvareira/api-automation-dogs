@@ -87,9 +87,17 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Debug output do PR
+        run:
+          echo "PR number: ${{ steps.cpr.outputs.pull-request-number }}"
+
       - name: Merge automático do PR
-        if: steps.cpr.outputs.pull-request-number != ''
-        run: gh pr merge ${{ steps.cpr.outputs.pull-request-number }} --merge --auto
+        run: |
+          if [ -n "${{ steps.cpr.outputs.pull-request-number }}" ]; then
+            gh pr merge ${{ steps.cpr.outputs.pull-request-number }} --merge --auto --admin
+          else
+            echo "Nenhum PR criado."
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
