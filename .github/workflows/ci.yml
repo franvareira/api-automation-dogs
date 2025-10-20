@@ -2,14 +2,15 @@ name: CI/CD - Execução de Testes Automatizados
 
 permissions:
   contents: write
+  pull_request: write
   pages: write
   id-token: write
 
 on:
   push:
-    branches: [ develop, master ]
+    branches: [ develop ]
   pull_request:
-    branches: [ develop, master ]
+    branches: [ master ]
   workflow_dispatch:
 
 jobs:
@@ -48,10 +49,46 @@ jobs:
           name: allure-report
           path: target/site/allure-maven-plugin
 
-  deploy-report:
+  create_pr:
     runs-on: ubuntu-latest
     needs: test
-    if: ${{ success() && github.ref == 'refs/heads/master' }}
+    name: Criar PR de develop para master
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Criar Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: master
+          branch: develop
+          title: 'Merge de develop para master'
+          body: 'PR gerado automaticamente pelo GitHub Actions após testes passarem ✅'
+          draft: false
+          labels: 'automerge'
+
+  automerge:
+    runs-on: ubuntu-latest
+    needs: create_pr
+    name: Merge automático do PR
+    steps:
+      - name: Autenticar GitHub CLI
+        run: gh auth setup-git
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Merge automático do PR
+        if: steps.cpr.outputs.pull-request-number != ''
+        run: gh pr merge ${{ steps.cpr.outputs.pull-request-number }} --merge --auto
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy-report:
+    runs-on: ubuntu-latest
+    needs: automerge
+    if: ${{ github.ref == 'refs/heads/master' }}
     name: Publicar Allure Report (Master)
     steps:
       - name: Checkout do código
