@@ -53,17 +53,19 @@ jobs:
     needs: test
     name: Criar PR de develop para master
     steps:
-      - name: Checkout do código
+      - name: Checkout código
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Criar branch temporária para PR
+      - name: Configurar usuário Git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout -b pr/develop-to-master
-          git push origin pr/develop-to-master
+
+      - name: Gerar nome único da branch de PR
+        id: vars
+        run: echo "BRANCH_NAME=pr/develop-to-master-$(date +%s)" >> $GITHUB_ENV
 
       - name: Criar Pull Request
         id: cpr
@@ -71,48 +73,53 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           base: master
-          branch: pr/develop-to-master
-          title: 'Merge de develop para master'
-          body: 'PR gerado automaticamente pelo GitHub Actions após testes passarem ✅'
+          branch: ${{ env.BRANCH_NAME }}
+          title: 'Merge automático de develop para master'
+          body: 'PR criada automaticamente pelo GitHub Actions'
           draft: false
           labels: 'automerge'
 
-  automerge:
-    runs-on: ubuntu-latest
-    needs: create_pr
-    name: Merge automático do PR
-    steps:
-      - name: Checkout do Código
-        uses: actions/checkout@v4
-        with:
-         fetch-depth: 0
+  auto_merge:
+      runs-on: ubuntu-latest
+      needs: create_pr
+      name: Merge automático do PR
+      steps:
+        - name: Checkout código
+          uses: actions/checkout@v4
 
-      - name: Instalar e autenticar GitHub CLI
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gh
-          echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+        - name: Instalar GitHub CLI
+          run: sudo apt-get install -y gh
 
-      - name: Verificar se PR existe
-        id: check_pr
-        run: |
-          PR_NUMBER=$(gh pr list --base master --head pr/develop-to-master --json number --jq '.[0].number')
-          echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
-          if [ -z "$PR_NUMBER" ]; then
-            echo "Nenhum PR encontrado."
-            exit 0
-          fi
-          echo "PR encontrado: $PR_NUMBER"
+        - name: Autenticar no GitHub CLI
+          run: gh auth setup-git
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Fazer merge automático do PR
-        if: env.PR_NUMBER != ''
-        run: gh pr merge $PR_NUMBER --merge --auto --admin
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        - name: Aguardar PR ser reconhecida
+          run: sleep 10
+
+        - name: Obter número da PR criada
+          id: prnumber
+          run: |
+            PR_NUMBER=$(gh pr list --base master --head ${{ env.BRANCH_NAME }} --json number --jq '.[0].number')
+            echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
+            if [ -z "$PR_NUMBER" ]; then
+              echo "Nenhuma PR encontrada. Nada a mergear."
+              exit 0
+            fi
+            echo "PR encontrada: $PR_NUMBER"
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+        - name: Fazer merge automático
+          if: env.PR_NUMBER != ''
+          run: gh pr merge $PR_NUMBER --merge --auto --admin
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   deploy-report:
     runs-on: ubuntu-latest
-    needs: automerge
+    needs: auto_merge
     if: ${{ github.ref == 'refs/heads/master' }}
     name: Publicar Allure Report (Master)
     steps:
