@@ -82,6 +82,11 @@ jobs:
     needs: create_pr
     name: Merge automático do PR
     steps:
+      - name: Checkout do Código
+        uses: actions/checkout@v4
+        with:
+         fetch-depth: 0
+
       - name: Instalar e autenticar GitHub CLI
         run: |
           sudo apt-get update
