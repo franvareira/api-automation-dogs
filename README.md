@@ -160,17 +160,17 @@ O `ci.yml` será algo como:
 on:
   push:
     branches: [ develop ]
-  pull_request:
-    branches: [ master ]
   workflow_dispatch:
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    name: Testes automatizados
+    name: Testes Automatizados
     steps:
       - name: Checkout do código
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 ```
 
 Após o merge para a `master`, o relatório ficará disponível em:
