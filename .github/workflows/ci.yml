@@ -98,9 +98,9 @@ jobs:
           else
             echo "Nenhum PR criado."
           fi
+        shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
 
   deploy-report:
     runs-on: ubuntu-latest
