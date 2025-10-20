@@ -12,8 +12,6 @@ Este projeto usa Java, Maven, JUnit 5, RestAssured e Allure para geração de re
 ![Java 23](https://img.shields.io/badge/Java-23-blue)  
 ![Maven](https://img.shields.io/badge/Maven-3.x-orange)
 
-> ⚠️ O link do Allure Report só funcionará após o primeiro merge para `main` (quando o GitHub Pages estiver configurado).
-
 ---
 
 ## 🧱 Tecnologias & versões

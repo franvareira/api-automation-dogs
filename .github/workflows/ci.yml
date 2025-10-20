@@ -83,6 +83,8 @@ jobs:
       runs-on: ubuntu-latest
       needs: create_pr
       name: Merge automático do PR
+      env:
+        PR_BRANCH: pr/develop-to-master
       steps:
         - name: Checkout código
           uses: actions/checkout@v4
@@ -99,17 +101,18 @@ jobs:
           run: sleep 10
 
         - name: Obter número da PR criada
-          id: prnumber
+          id: get_pr
           run: |
-            PR_NUMBER=$(gh pr list --base master --head ${{ env.BRANCH_NAME }} --json number --jq '.[0].number')
-            echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
-            if [ -z "$PR_NUMBER" ]; then
-              echo "Nenhuma PR encontrada. Nada a mergear."
-              exit 0
-            fi
-            echo "PR encontrada: $PR_NUMBER"
+              PR_NUMBER=$(gh pr list --base master --head "$PR_BRANCH" --json "number" --jq '.[0].number')
+              echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
+              if [ -z "$PR_NUMBER" ]; then
+                echo "Nenhuma PR encontrada. Nada a mergear."
+                exit 0
+              fi
+              echo "PR encontrada: $PR_NUMBER"
           env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
         - name: Fazer merge automático
           if: env.PR_NUMBER != ''
