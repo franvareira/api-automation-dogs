@@ -109,7 +109,7 @@ brew install allure
 
 ### Via download direto
 
-1. Vá até o repositório oficial do Allure e baixe o pacote binário. [LINK](https://allurereport.org/docs/install-for-windows/)  
+1. Vá até o repositório oficial do Allure e baixe o pacote binário. [Acesse Aqui](https://allurereport.org/docs/install-for-windows/)  
 2. Extraia para uma pasta no seu sistema (ex: `/usr/local/bin` ou algo no PATH).  
 3. Adicione o executável `allure` ao seu PATH.
 
@@ -160,20 +160,20 @@ O `ci.yml` será algo como:
 on:
   push:
     branches: [ develop ]
-  pull_request:
-    branches: [ master ]
   workflow_dispatch:
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    name: Testes automatizados
+    name: Testes Automatizados
     steps:
       - name: Checkout do código
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 ```
 
-Após o merge para a `master`, o relatório ficará disponível em:
+Após o merge para a `master`, o relatório ficará disponível em no link abaixo:
 
 ```
 https://franvareira.github.io/api-automation-dogs/
