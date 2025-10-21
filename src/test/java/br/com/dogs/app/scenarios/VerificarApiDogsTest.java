@@ -3,6 +3,7 @@ package br.com.dogs.app.scenarios;
 import br.com.dogs.app.services.GetListAllDogs;
 import br.com.dogs.app.services.GetListDogParam;
 import br.com.dogs.app.services.GetListDogsRandom;
+import br.com.dogs.app.services.GetListDogsRound;
 import io.qameta.allure.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,14 @@ public class VerificarApiDogsTest {
     public void validarListRandomDogs(){
 
         GetListDogsRandom.validarListRandom();
+    }
+
+    @Test
+    @Description("Validar o retorno da lista de imagens de cadastrados de dogs por tipo")
+    @DisplayName("ValidarListBreedsRound")
+    public void validarListImageDogs(){
+
+        GetListDogsRound.validarListDogsImage();
     }
 
     @Test

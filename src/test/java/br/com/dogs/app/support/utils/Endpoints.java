@@ -7,5 +7,6 @@ public class Endpoints {
     protected static final String PATH_ALL = FileOperations.getProperties("environments").getProperty("pathAll");
     protected static final String PATH_RANDOM = FileOperations.getProperties("environments").getProperty("pathRandom");
     protected static final String PATH_PARAM = FileOperations.getProperties("environments").getProperty("pathParam");
+    protected static final String PATH_ROUD = FileOperations.getProperties("environments").getProperty("pathRound");
 
 }
